@@ -9,6 +9,8 @@
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
     .hero { background: linear-gradient(135deg, #0f172a, #1e2937); }
+    .profit { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
   </style>
 </head>
 <body class="bg-gray-950 text-gray-100">
@@ -17,11 +19,10 @@
   <nav class="bg-black border-b border-gray-800 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <h1 class="text-2xl font-bold text-cyan-400">💰 CryptoProfitHub</h1>
-      <div class="flex gap-8">
-        <a href="#scanner" class="hover:text-cyan-400">Scanner</a>
+      <div class="flex gap-8 text-sm">
+        <a href="#scanner" class="hover:text-cyan-400">Live Scanner</a>
         <a href="#bonuses" class="hover:text-cyan-400">No-Deposit Bonuses</a>
-        <a href="#signals" class="hover:text-cyan-400">Signals</a>
-        <a href="#earn" class="text-emerald-400 font-medium">Monetize</a>
+        <a href="#earn" class="hover:text-cyan-400">Earn Money</a>
       </div>
     </div>
   </nav>
@@ -30,109 +31,296 @@
   <section class="hero py-20 text-center">
     <div class="max-w-4xl mx-auto px-6">
       <h2 class="text-5xl font-bold mb-6">Make Money with Crypto Daily</h2>
-      <p class="text-xl text-gray-300 mb-8">Free Arbitrage Scanner • Best Bonuses • Trading Signals</p>
+      <p class="text-xl text-gray-300 mb-8">Real-time Arbitrage Scanner • Best Bonuses • Passive Income Tools</p>
       <button onclick="document.getElementById('scanner').scrollIntoView({ behavior: 'smooth' })" 
         class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xl px-10 py-4 rounded-2xl inline-flex items-center gap-3">
-        <i class="fa-solid fa-robot"></i> Start Free Scanner
+        <i class="fa-solid fa-robot"></i> Open Live Scanner
       </button>
     </div>
   </section>
 
-  <!-- Arbitrage Scanner -->
-  <section id="scanner" class="max-w-7xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold mb-8 text-center">Live Arbitrage Scanner</h2>
-    <div id="arbitrage-content">
-      <!-- The full scanner from previous version will be embedded here -->
-      <p class="text-center text-gray-400 py-12">Loading real-time scanner...</p>
-    </div>
-  </section>
-
-  <!-- No Deposit Bonuses -->
-  <section id="bonuses" class="bg-gray-900 py-16">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-3xl font-bold mb-10 text-center">💸 No Deposit Bonuses (June 2026)</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-gray-800 rounded-3xl p-8">
-          <h3 class="text-2xl font-bold text-emerald-400">$100 No Deposit</h3>
-          <p class="text-gray-400 mt-2">Trading.com</p>
-          <a href="https://www.trading.com/us/no-deposit-bonus" target="_blank" 
-            class="block mt-6 bg-white text-black text-center py-4 rounded-2xl font-bold hover:bg-gray-200">
-            Claim $100 Now →
-          </a>
-        </div>
-        <div class="bg-gray-800 rounded-3xl p-8">
-          <h3 class="text-2xl font-bold text-emerald-400">$30 No Deposit</h3>
-          <p class="text-gray-400 mt-2">XM Forex</p>
-          <a href="https://www.xm.com" target="_blank" 
-            class="block mt-6 bg-white text-black text-center py-4 rounded-2xl font-bold hover:bg-gray-200">
-            Claim $30 Now →
-          </a>
-        </div>
-        <div class="bg-gray-800 rounded-3xl p-8">
-          <h3 class="text-2xl font-bold text-emerald-400">Up to $20 USDT</h3>
-          <p class="text-gray-400 mt-2">BYDFi Crypto</p>
-          <a href="https://www.bydfi.com" target="_blank" 
-            class="block mt-6 bg-white text-black text-center py-4 rounded-2xl font-bold hover:bg-gray-200">
-            Register & Claim →
-          </a>
-        </div>
+  <!-- Real-time Arbitrage Scanner -->
+  <section id="scanner" class="max-w-7xl mx-auto px-6 py-16 bg-gray-900 rounded-3xl mx-4">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold flex items-center gap-3">
+        <i class="fa-solid fa-bolt text-cyan-400"></i>
+        Real-time Arbitrage Scanner
+      </h2>
+      <div id="wsStatus" class="flex items-center gap-2 text-amber-400 text-sm">
+        <i class="fa-solid fa-circle"></i>
+        <span>Connecting...</span>
       </div>
     </div>
+
+    <!-- Config -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-gray-800 rounded-2xl p-5">
+        <h3 class="text-xs text-gray-400 mb-1">Min Profit %</h3>
+        <input id="minProfit" type="number" value="0.8" step="0.1" class="bg-gray-900 w-full rounded-xl px-4 py-3 text-xl font-bold"/>
+      </div>
+      <div class="bg-gray-800 rounded-2xl p-5">
+        <h3 class="text-xs text-gray-400 mb-1">Scan Interval (sec)</h3>
+        <input id="interval" type="number" value="15" class="bg-gray-900 w-full rounded-xl px-4 py-3 text-xl font-bold"/>
+      </div>
+      <div class="bg-gray-800 rounded-2xl p-5 flex items-center justify-center">
+        <button onclick="toggleScanning()" id="scanBtn"
+          class="bg-cyan-600 hover:bg-cyan-500 px-8 py-3 rounded-2xl font-medium flex items-center gap-2 w-full justify-center">
+          <i class="fa-solid fa-robot"></i> <span>Start Scanner</span>
+        </button>
+      </div>
+      <div class="bg-gray-800 rounded-2xl p-5 flex flex-col justify-center">
+        <p class="text-xs text-gray-400">Last Update</p>
+        <p id="lastScan" class="font-mono text-cyan-400">—</p>
+      </div>
+    </div>
+
+    <!-- Opportunities -->
+    <div class="mb-8">
+      <div class="flex justify-between mb-4">
+        <h3 class="font-semibold">Profitable Opportunities</h3>
+        <span id="count" class="text-sm bg-gray-800 px-4 py-1.5 rounded-full">0 found</span>
+      </div>
+      <div id="opportunities" class="space-y-4 min-h-[300px]">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+
+    <!-- Live Price Table -->
+    <div>
+      <h3 class="font-semibold mb-4">Live Prices Across Exchanges</h3>
+      <div id="priceTable" class="overflow-x-auto rounded-2xl bg-gray-800 p-4"></div>
+    </div>
   </section>
 
-  <!-- Signals -->
-  <section id="signals" class="max-w-7xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold mb-8">🔥 Hot Trading Signals</h2>
+  <!-- Bonuses Section -->
+  <section id="bonuses" class="max-w-7xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold mb-10 text-center">💸 No Deposit Bonuses (Earn Without Risk)</h2>
     <div class="grid md:grid-cols-3 gap-6">
-      <!-- Mock signals - you can connect real API later -->
-      <div class="bg-gray-900 p-6 rounded-3xl">
-        <div class="text-emerald-400 text-sm">BINANCE • 5m ago</div>
-        <div class="text-2xl font-bold mt-2">BTC/USDT Long</div>
-        <div class="text-3xl font-mono mt-4">68,420</div>
-        <div class="text-emerald-400 mt-6">+2.8% Target</div>
+      <div class="bg-gray-800 rounded-3xl p-8 hover:scale-105 transition">
+        <h3 class="text-3xl font-bold text-emerald-400">$100 Credit</h3>
+        <p class="mt-2 text-gray-400">Trading.com</p>
+        <a href="https://www.trading.com/us/no-deposit-bonus" target="_blank" class="mt-6 block bg-white text-black text-center py-4 rounded-2xl font-bold">Claim Now →</a>
+      </div>
+      <div class="bg-gray-800 rounded-3xl p-8 hover:scale-105 transition">
+        <h3 class="text-3xl font-bold text-emerald-400">$30 No Deposit</h3>
+        <p class="mt-2 text-gray-400">XM Broker</p>
+        <a href="https://www.xm.com" target="_blank" class="mt-6 block bg-white text-black text-center py-4 rounded-2xl font-bold">Claim Now →</a>
+      </div>
+      <div class="bg-gray-800 rounded-3xl p-8 hover:scale-105 transition">
+        <h3 class="text-3xl font-bold text-emerald-400">Up to $20 USDT</h3>
+        <p class="mt-2 text-gray-400">BYDFi Crypto</p>
+        <a href="https://www.bydfi.com" target="_blank" class="mt-6 block bg-white text-black text-center py-4 rounded-2xl font-bold">Register & Claim</a>
       </div>
     </div>
   </section>
 
-  <!-- Monetization -->
+  <!-- Earn Money -->
   <section id="earn" class="bg-black py-20">
     <div class="max-w-4xl mx-auto text-center px-6">
-      <h2 class="text-4xl font-bold mb-6">How You Can Earn From This Site</h2>
-      <div class="grid md:grid-cols-3 gap-8 mt-12">
-        <div>
+      <h2 class="text-4xl font-bold mb-6">Start Earning From This Website</h2>
+      <p class="text-gray-400 mb-10">Replace links with your affiliate accounts and monetize traffic</p>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gray-900 p-8 rounded-3xl">
           <i class="fa-solid fa-link text-5xl text-cyan-400 mb-4"></i>
-          <h3 class="font-bold">Affiliate Links</h3>
-          <p class="text-gray-400">Earn $50–$500 per referral from brokers</p>
+          <h3 class="font-bold text-xl">Affiliate Commissions</h3>
+          <p class="text-gray-400">Earn $50–$500 per signup</p>
         </div>
-        <div>
+        <div class="bg-gray-900 p-8 rounded-3xl">
           <i class="fa-solid fa-ad text-5xl text-cyan-400 mb-4"></i>
-          <h3 class="font-bold">Display Ads</h3>
-          <p class="text-gray-400">Google AdSense / Crypto ads</p>
+          <h3 class="font-bold text-xl">Google AdSense</h3>
+          <p class="text-gray-400">Passive banner income</p>
         </div>
-        <div>
+        <div class="bg-gray-900 p-8 rounded-3xl">
           <i class="fa-solid fa-crown text-5xl text-cyan-400 mb-4"></i>
-          <h3 class="font-bold">Premium Membership</h3>
-          <p class="text-gray-400">$19/month for pro scanner</p>
+          <h3 class="font-bold text-xl">Premium Scanner</h3>
+          <p class="text-gray-400">$9–29/month membership</p>
         </div>
       </div>
     </div>
   </section>
 
-  <footer class="bg-black py-12 text-center text-gray-500">
-    <p>Made for you • CryptoProfitHub © 2026</p>
+  <footer class="bg-black py-10 text-center text-gray-500 border-t border-gray-800">
+    <p>CryptoProfitHub © 2026 • Built for passive income</p>
   </footer>
 
   <script>
-    // You can paste the full WebSocket Arbitrage Scanner code here (from previous message)
-    // For now, showing placeholder
-    document.getElementById('arbitrage-content').innerHTML = `
-      <div class="text-center py-12 bg-gray-900 rounded-3xl">
-        <p class="text-2xl mb-4">🚀 Real-time Arbitrage Scanner Ready</p>
-        <button onclick="alert('Scanner started! (Connect full code here)')" 
-          class="bg-cyan-500 text-black px-8 py-4 rounded-2xl font-bold">
-          Start Live Scanning
-        </button>
-      </div>`;
+    // ==================== REAL-TIME SCANNER CODE ====================
+    const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT'];
+    const displaySymbols = symbols.map(s => s.replace('USDT', '/USDT'));
+
+    const exchanges = {
+      binance: { name: "Binance", color: "bg-yellow-500" },
+      bybit: { name: "Bybit", color: "bg-blue-500" },
+      okx: { name: "OKX", color: "bg-green-500" },
+      gateio: { name: "Gate.io", color: "bg-purple-500" }
+    };
+
+    let prices = {};
+    let wsBinance = null;
+    let isScanning = false;
+    let intervalId = null;
+    let lastUpdate = null;
+
+    function initPrices() {
+      prices = {};
+      displaySymbols.forEach(sym => prices[sym] = {});
+    }
+
+    function connectBinanceWS() {
+      if (wsBinance) wsBinance.close();
+      const streams = symbols.map(s => s.toLowerCase() + '@ticker').join('/');
+      const wsUrl = `wss://stream.binance.com:9443/stream?streams=${streams}`;
+
+      wsBinance = new WebSocket(wsUrl);
+
+      wsBinance.onopen = () => {
+        document.getElementById('wsStatus').innerHTML = `<i class="fa-solid fa-circle text-green-400"></i><span class="text-green-400">Live</span>`;
+      };
+
+      wsBinance.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (!data.data) return;
+        const ticker = data.data;
+        const symbol = ticker.s.replace('USDT', '/USDT');
+        const price = parseFloat(ticker.c);
+
+        if (prices[symbol]) {
+          prices[symbol].binance = price;
+          updatePriceTable();
+          detectArbitrage();
+        }
+      };
+
+      wsBinance.onclose = () => setTimeout(connectBinanceWS, 3000);
+    }
+
+    async function fetchPrice(ex, symbol) {
+      try {
+        const clean = symbol.replace('/', '');
+        let url = '';
+        if (ex === 'bybit') url = `https://api.bybit.com/v5/market/tickers?category=spot&symbol=${clean}`;
+        else if (ex === 'okx') url = `https://www.okx.com/api/v5/market/ticker?instId=${clean}-USDT`;
+        else if (ex === 'gateio') url = `https://api.gateio.ws/api/v4/spot/tickers?currency_pair=${clean}_USDT`;
+
+        const res = await fetch(url);
+        const json = await res.json();
+        if (ex === 'bybit') return parseFloat(json.result?.[0]?.lastPrice);
+        if (ex === 'okx') return parseFloat(json.data?.[0]?.last);
+        if (ex === 'gateio') return parseFloat(json[0]?.last);
+      } catch(e) {}
+      return 0;
+    }
+
+    async function pollOtherExchanges() {
+      for (let symbol of displaySymbols) {
+        for (let ex of ['bybit','okx','gateio']) {
+          const p = await fetchPrice(ex, symbol);
+          if (p > 0) prices[symbol][ex] = p;
+        }
+      }
+      updatePriceTable();
+      detectArbitrage();
+    }
+
+    function updatePriceTable() {
+      let html = `<table class="w-full"><thead><tr class="border-b border-gray-700"><th class="pb-3 text-left">Pair</th>`;
+      Object.keys(exchanges).forEach(ex => html += `<th class="pb-3 text-center">${exchanges[ex].name}</th>`);
+      html += `</tr></thead><tbody>`;
+
+      displaySymbols.forEach(symbol => {
+        html += `<tr class="border-b border-gray-700"><td class="py-3 font-medium">${symbol}</td>`;
+        Object.keys(exchanges).forEach(ex => {
+          const price = prices[symbol][ex] || 0;
+          html += `<td class="py-3 text-center font-mono">${price ? price.toLocaleString() : '—'}</td>`;
+        });
+        html += `</tr>`;
+      });
+      html += `</tbody></table>`;
+      document.getElementById('priceTable').innerHTML = html;
+    }
+
+    function detectArbitrage() {
+      const container = document.getElementById('opportunities');
+      let opps = [];
+
+      displaySymbols.forEach(symbol => {
+        const data = prices[symbol];
+        const validEx = Object.keys(data).filter(ex => data[ex] > 0);
+        if (validEx.length < 2) return;
+
+        let bestBuyEx = null, bestBuy = Infinity;
+        let bestSellEx = null, bestSell = 0;
+
+        validEx.forEach(ex => {
+          const p = data[ex];
+          if (p < bestBuy) { bestBuy = p; bestBuyEx = ex; }
+          if (p > bestSell) { bestSell = p; bestSellEx = ex; }
+        });
+
+        if (bestBuyEx === bestSellEx) return;
+
+        const spread = ((bestSell - bestBuy) / bestBuy) * 100;
+        const netProfit = spread - 0.25;
+
+        if (netProfit >= parseFloat(document.getElementById('minProfit').value)) {
+          opps.push({symbol, buyEx: bestBuyEx, buyPrice: bestBuy, sellEx: bestSellEx, sellPrice: bestSell, netProfit: netProfit.toFixed(2)});
+        }
+      });
+
+      container.innerHTML = '';
+      if (opps.length === 0) {
+        container.innerHTML = `<div class="text-center py-16 text-gray-400">No profitable arbitrage right now.<br>Scanner is running...</div>`;
+      } else {
+        opps.sort((a,b) => b.netProfit - a.netProfit);
+        opps.forEach(opp => {
+          const div = document.createElement('div');
+          div.className = `bg-gray-800 rounded-2xl p-6 flex justify-between items-center profit`;
+          div.innerHTML = `
+            <div class="flex items-center gap-8">
+              <div class="text-3xl font-bold">${opp.symbol}</div>
+              <div>
+                <div class="text-cyan-400">${exchanges[opp.buyEx].name}</div>
+                <div class="font-mono text-xl">$${opp.buyPrice}</div>
+              </div>
+              <i class="fa-solid fa-arrow-right text-2xl text-cyan-400"></i>
+              <div>
+                <div class="text-emerald-400">${exchanges[opp.sellEx].name}</div>
+                <div class="font-mono text-xl">$${opp.sellPrice}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-4xl font-bold text-emerald-400">+${opp.netProfit}%</div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+      document.getElementById('count').textContent = `${opps.length} opportunities`;
+      document.getElementById('lastScan').textContent = new Date().toLocaleTimeString();
+    }
+
+    function toggleScanning() {
+      isScanning = !isScanning;
+      const btn = document.getElementById('scanBtn');
+      if (isScanning) {
+        btn.innerHTML = `<i class="fa-solid fa-pause"></i> Stop`;
+        btn.classList.add('bg-red-600');
+        initPrices();
+        connectBinanceWS();
+        pollOtherExchanges();
+        intervalId = setInterval(pollOtherExchanges, 15000);
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-robot"></i> Start Scanner`;
+        btn.classList.remove('bg-red-600');
+        if (wsBinance) wsBinance.close();
+        if (intervalId) clearInterval(intervalId);
+      }
+    }
+
+    // Auto start scanner when page loads
+    window.onload = () => {
+      setTimeout(() => toggleScanning(), 800);
+    };
   </script>
 </body>
 </html>
