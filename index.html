@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crypto Profit Hub - Earn Daily</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .hero { background: linear-gradient(135deg, #0f172a, #1e2937); }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100">
+
+  <!-- Navbar -->
+  <nav class="bg-black border-b border-gray-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-cyan-400">💰 CryptoProfitHub</h1>
+      <div class="flex gap-8">
+        <a href="#scanner" class="hover:text-cyan-400">Scanner</a>
+        <a href="#bonuses" class="hover:text-cyan-400">No-Deposit Bonuses</a>
+        <a href="#signals" class="hover:text-cyan-400">Signals</a>
+        <a href="#earn" class="text-emerald-400 font-medium">Monetize</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero py-20 text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-5xl font-bold mb-6">Make Money with Crypto Daily</h2>
+      <p class="text-xl text-gray-300 mb-8">Free Arbitrage Scanner • Best Bonuses • Trading Signals</p>
+      <button onclick="document.getElementById('scanner').scrollIntoView({ behavior: 'smooth' })" 
+        class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xl px-10 py-4 rounded-2xl inline-flex items-center gap-3">
+        <i class="fa-solid fa-robot"></i> Start Free Scanner
+      </button>
+    </div>
+  </section>
+
+  <!-- Arbitrage Scanner -->
+  <section id="scanner" class="max-w-7xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold mb-8 text-center">Live Arbitrage Scanner</h2>
+    <div id="arbitrage-content">
+      <!-- The full scanner from previous version will be embedded here -->
+      <p class="text-center text-gray-400 py-12">Loading real-time scanner...</p>
+    </div>
+  </section>
+
+  <!-- No Deposit Bonuses -->
+  <section id="bonuses" class="bg-gray-900 py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-10 text-center">💸 No Deposit Bonuses (June 2026)</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-gray-800 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-emerald-400">$100 No Deposit</h3>
+          <p class="text-gray-400 mt-2">Trading.com</p>
+          <a href="https://www.trading.com/us/no-deposit-bonus" target="_blank" 
+            class="block mt-6 bg-white text-black text-center py-4 rounded-2xl font-bold hover:bg-gray-200">
+            Claim $100 Now →
+          </a>
+        </div>
+        <div class="bg-gray-800 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-emerald-400">$30 No Deposit</h3>
+          <p class="text-gray-400 mt-2">XM Forex</p>
+          <a href="https://www.xm.com" target="_blank" 
+            class="block mt-6 bg-white text-black text-center py-4 rounded-2xl font-bold hover:bg-gray-200">
+            Claim $30 Now →
+          </a>
+        </div>
+        <div class="bg-gray-800 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-emerald-400">Up to $20 USDT</h3>
+          <p class="text-gray-400 mt-2">BYDFi Crypto</p>
+          <a href="https://www.bydfi.com" target="_blank" 
+            class="block mt-6 bg-white text-black text-center py-4 rounded-2xl font-bold hover:bg-gray-200">
+            Register & Claim →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signals -->
+  <section id="signals" class="max-w-7xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold mb-8">🔥 Hot Trading Signals</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Mock signals - you can connect real API later -->
+      <div class="bg-gray-900 p-6 rounded-3xl">
+        <div class="text-emerald-400 text-sm">BINANCE • 5m ago</div>
+        <div class="text-2xl font-bold mt-2">BTC/USDT Long</div>
+        <div class="text-3xl font-mono mt-4">68,420</div>
+        <div class="text-emerald-400 mt-6">+2.8% Target</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Monetization -->
+  <section id="earn" class="bg-black py-20">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <h2 class="text-4xl font-bold mb-6">How You Can Earn From This Site</h2>
+      <div class="grid md:grid-cols-3 gap-8 mt-12">
+        <div>
+          <i class="fa-solid fa-link text-5xl text-cyan-400 mb-4"></i>
+          <h3 class="font-bold">Affiliate Links</h3>
+          <p class="text-gray-400">Earn $50–$500 per referral from brokers</p>
+        </div>
+        <div>
+          <i class="fa-solid fa-ad text-5xl text-cyan-400 mb-4"></i>
+          <h3 class="font-bold">Display Ads</h3>
+          <p class="text-gray-400">Google AdSense / Crypto ads</p>
+        </div>
+        <div>
+          <i class="fa-solid fa-crown text-5xl text-cyan-400 mb-4"></i>
+          <h3 class="font-bold">Premium Membership</h3>
+          <p class="text-gray-400">$19/month for pro scanner</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-black py-12 text-center text-gray-500">
+    <p>Made for you • CryptoProfitHub © 2026</p>
+  </footer>
+
+  <script>
+    // You can paste the full WebSocket Arbitrage Scanner code here (from previous message)
+    // For now, showing placeholder
+    document.getElementById('arbitrage-content').innerHTML = `
+      <div class="text-center py-12 bg-gray-900 rounded-3xl">
+        <p class="text-2xl mb-4">🚀 Real-time Arbitrage Scanner Ready</p>
+        <button onclick="alert('Scanner started! (Connect full code here)')" 
+          class="bg-cyan-500 text-black px-8 py-4 rounded-2xl font-bold">
+          Start Live Scanning
+        </button>
+      </div>`;
+  </script>
+</body>
+</html>
